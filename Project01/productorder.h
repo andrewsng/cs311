@@ -1,12 +1,14 @@
 // productorder.h
 // Andrew Ng
-// 2020-09-01
+// Started: 2020-09-01
+// Updated: 2020-09-08
+//
 // CS 311 Fall 2020
 // Header for class ProductOrder
 // Product order: name and count
 
-#ifndef PRODUCTORDER_H
-#define PRODUCTORDER_H
+#ifndef FILE_PRODUCTORDER_H_INCLUDED
+#define FILE_PRODUCTORDER_H_INCLUDED
 
 #include <string>	// For std::string
 #include <ostream>	// For std::ostream
@@ -20,7 +22,7 @@
 // class ProductOrder
 // Product order: name and count
 // invariants:
-//   0 <= inv_
+//   0 <= count_
 class ProductOrder
 {
 
@@ -87,26 +89,11 @@ public:
 // ---- ProductOrder: general public operators ----
 public:
 
-	// op==
-	// Returns True if both the names and counts are equal
-	bool operator==(const ProductOrder & other) const
-	{
-		return (name_ == other.getName() &&
-			     inv_ == other.getNumber());
-	}
-
-	// op!=
-	// Returns True if ProductOrders are not equal
-	bool operator!=(const ProductOrder & other) const
-	{
-		return !(*this == other);
-	}
-
 	// op++ (pre)
 	// Adds 1 to count
 	ProductOrder & operator++()
 	{
-		++inv_;
+		++count_;
 		return *this;
 	}
 
@@ -123,8 +110,8 @@ public:
 	// Subtracts 1 from count if count is not 0
 	ProductOrder & operator--()
 	{
-		if (inv_ != 0)
-			--inv_;
+		if (count_ != 0)
+			--count_;
 		return *this;
 	}
 
@@ -133,7 +120,7 @@ public:
 	ProductOrder operator--([[maybe_unused]] int dummy)
 	{
 		auto save = *this;
-		if (inv_ != 0)
+		if (count_ != 0)
 			--(*this);
 		return save;
 	}
@@ -142,7 +129,7 @@ public:
 private:
 
 	std::string name_;	// Product name
-	int inv_;			// Inventory count (0 or greater)
+	int count_;			// Order count (0 or greater)
 
 };	// End class ProductOrder
 
@@ -152,10 +139,22 @@ private:
 /////////////////////////////////////////////////////////////
 
 
-// operator<< (ostream, ProductOrder)
+// op== (ProductOrder, ProductOrder)
+// Returns True if both the names and counts are equal
+bool operator==(const ProductOrder & lhs,
+	            const ProductOrder & rhs);
+
+
+// op!= (ProductOrder, ProductOrder)
+// Returns True if ProductOrders are not equal
+bool operator!=(const ProductOrder & lhs,
+	            const ProductOrder & rhs);
+
+
+// op<< (ostream, ProductOrder)
 // Prints string representation of data
 // given by ProductOrder::toString member function
 std::ostream & operator<<(std::ostream & os,
-	                      const ProductOrder & other);
+	                      const ProductOrder & rhs);
 
-#endif
+#endif  // #ifndef FILE_PRODUCTORDER_H_INCLUDED

@@ -1,6 +1,8 @@
 // productorder.cpp
 // Andrew Ng
-// 2020-09-01
+// Started: 2020-09-01
+// Updated: 2020-09-08
+//
 // CS 311 Fall 2020
 // Source for class ProductOrder
 // Product order: name and count
@@ -25,7 +27,7 @@ std::string ProductOrder::getName() const
 // (See header.)
 int ProductOrder::getNumber() const
 {
-	return inv_;
+	return count_;
 }
 
 
@@ -41,7 +43,7 @@ void ProductOrder::setName(const std::string & name)
 // (See header.)
 void ProductOrder::setNumber(int inventory)
 {
-	inv_ = inventory;
+	count_ = inventory;
 }
 
 
@@ -49,7 +51,7 @@ void ProductOrder::setNumber(int inventory)
 // (See header.)
 bool ProductOrder::empty() const
 {
-	return inv_ == 0;
+	return count_ == 0;
 }
 
 
@@ -57,7 +59,7 @@ bool ProductOrder::empty() const
 // (See header.)
 std::string ProductOrder::toString() const
 {
-	return name_ + " (" + std::to_string(inv_) + ")";
+	return name_ + " (" + std::to_string(count_) + ")";
 }
 
 
@@ -66,11 +68,30 @@ std::string ProductOrder::toString() const
 ////////////////////////////////////////////////////////////
 
 
-// operator<< (ostream, ProductOrder)
+// op== (ProductOrder, ProductOrder)
+// (See header.)
+bool operator==(const ProductOrder & lhs,
+	            const ProductOrder & rhs)
+{
+	return (lhs.getName() == rhs.getName() &&
+		  lhs.getNumber() == rhs.getNumber());
+}
+
+
+// op!= (ProductOrder, ProductOrder)
+// (See header.)
+bool operator!=(const ProductOrder & lhs,
+	            const ProductOrder & rhs)
+{
+	return !(lhs == rhs);
+}
+
+
+// op<< (ostream, ProductOrder)
 // (See header.)
 std::ostream & operator<<(std::ostream & os,
-	                      const ProductOrder & other)
+	                      const ProductOrder & rhs)
 {
-	os << other.toString();
+	os << rhs.toString();
 	return os;
 }
