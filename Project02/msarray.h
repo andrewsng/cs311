@@ -1,6 +1,7 @@
 // msarray.h
 // Andrew S. Ng
-// 2020-09-14
+// Started: 2020-09-14
+// Updated: 2020-09-17
 //
 // CS 311 Fall 2020
 // Header for class template MSArray
@@ -19,7 +20,7 @@
 /////////////////////////////////////////////////////
 
 
-// class MSArray
+// class template MSArray
 // RAII class holding array of generic type and its size
 // Invariants:
 //   _arrayptr points to memory allocated by new[], owned by *this,
@@ -73,11 +74,11 @@ public:
         std::fill(begin(), end(), value);
     }
 
-    // Big 5: all defined
+    // BIG 5: ALL DEFINED
 
     // Dctor
     // Deallocates array
-    ~MSArray() noexcept
+    ~MSArray()
     {
         delete [] _arrayptr;
     }
@@ -180,7 +181,7 @@ private:
 
     size_type _size;         // Size of array (num. of items)
 
-};  // End class MSArray
+};  // End class template MSArray
 
 
 ////////////////////////////////////////////////////////////////
@@ -192,7 +193,7 @@ private:
 // Returns true if sizes are equal,
 // and all items are equal.
 // Requirements on Types:
-//   op== (T, T) must exist.
+//   T has a public op==.
 template <typename T>
 bool operator==(const MSArray<T> & lhs,
                 const MSArray<T> & rhs)
@@ -210,7 +211,7 @@ bool operator==(const MSArray<T> & lhs,
 // Returns true if both MSArray<T>
 // are not equal
 // Requirements on Types:
-//   op== (T, T) must exist.
+//   T has a public op==.
 template <typename T>
 bool operator!=(const MSArray<T> & lhs,
                 const MSArray<T> & rhs)
@@ -223,7 +224,7 @@ bool operator!=(const MSArray<T> & lhs,
 // Returns true if lhs is
 // lexicographically less than rhs
 // Requirements on Types:
-//   op< (T, T) must exist.
+//   T has a public op<.
 template <typename T>
 bool operator<(const MSArray<T> & lhs,
                 const MSArray<T> & rhs)
@@ -238,7 +239,7 @@ bool operator<(const MSArray<T> & lhs,
 // op> (MSArray<T>, MSArray<T>)
 // Returns true if rhs is less than lhs
 // Requirements on Types:
-//   op< (T, T) must exist.
+//   T has a public op<.
 template <typename T>
 bool operator>(const MSArray<T> & lhs,
                 const MSArray<T> & rhs)
@@ -250,7 +251,7 @@ bool operator>(const MSArray<T> & lhs,
 // op<= (MSArray<T>, MSArray<T>)
 // Returns true if rhs is not less than lhs
 // Requirements on Types:
-//   op< (T, T) must exist.
+//   T has a public op<.
 template <typename T>
 bool operator<=(const MSArray<T> & lhs,
                 const MSArray<T> & rhs)
@@ -262,7 +263,7 @@ bool operator<=(const MSArray<T> & lhs,
 // op>= (MSArray<T>, MSArray<T>)
 // Returns true if lhs is not less than rhs
 // Requirements on Types:
-//   op< (T, T) must exist.
+//   T has a public op<.
 template <typename T>
 bool operator>=(const MSArray<T> & lhs,
                 const MSArray<T> & rhs)
