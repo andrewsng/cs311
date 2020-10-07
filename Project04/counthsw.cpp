@@ -10,6 +10,8 @@
 #include "counthsw.h"  // For countHSW
 #include <vector>      // For std::vector
 using std::vector;
+#include <cmath>
+using std::abs;
 
 
 // checkSquare
@@ -66,6 +68,12 @@ int countHSW_recurse(vector<vector<int>> & board,
     if (squaresLeft == 0 &&
         curr_x == finish_x && curr_y == finish_y)
         return 1;
+
+    // DEAD ENDS
+
+    if (squaresLeft > 0 &&
+        curr_x == finish_x && curr_y == finish_y)
+        return 0;
 
     // RECURSIVE CASE
 
