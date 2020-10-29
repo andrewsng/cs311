@@ -45,7 +45,7 @@
 #include <algorithm>
 // For std::max, std::copy
 #include <utility>
-// For std::swap
+// For std::swap, std::ptrdiff_t
 
 
 // *********************************************************************
@@ -99,17 +99,14 @@ public:
     // Copy ctor
     // Strong Guarantee
     TFSArray(const TFSArray<value_type> & other)
-        :_capacity(other._capacity),
-         _size(other.size())/*,
-         _data(other._capacity == 0 ? nullptr
-                                    : new value_type[other._capacity])*/
+        :_capacity(0),
+         _size(0),
+         _data(nullptr)
     {
-        /*TFSArray<value_type> temp(other._capacity);
+        TFSArray<value_type> temp(other._capacity);
         temp._size = other.size();
-        std::copy(other.begin(), other.end(), temp.begin());*/
-        value_type * temp = new value_type[other._capacity];
-        std::copy(other.begin(), other.end(), temp);
-        std::swap(_data, temp);
+        std::copy(other.begin(), other.end(), temp.begin());
+        swap(temp);
     }
 
     // Move ctor
@@ -211,7 +208,7 @@ public:
             _size = newsize;
         else
         {
-            std::size_t newCapacity = std::max(2 * _capacity, newsize);
+            size_type newCapacity = std::max(size_type(2) * _capacity, newsize);
             TFSArray<value_type> temp(newCapacity);
             temp._size = newsize;
             std::copy(begin(), end(), temp.begin());
@@ -224,7 +221,7 @@ public:
     iterator insert(iterator pos,
                     const value_type & item)
     {
-        std::size_t index = pos - begin();
+        std::ptrdiff_t index = pos - begin();
         resize(size() + 1);
         pos = begin() + index;
         std::rotate(pos, end() - 1, end());
