@@ -1,13 +1,19 @@
-// tfsarray.h  INCOMPLETE
-// VERSION 5
+// tfsarray.h
+// VERSION 6
+//
+// Original author (v1-v5):
 // Glenn G. Chappell
 // Started: 2020-10-14
 // Updated: 2020-10-21
 //
+// Completed by (v6):
+// Andrew S. Ng
+// Started: 2020-10-26
+// Updated: 2020-10-29
+//
 // For CS 311 Fall 2020
-// Header for class TFSArray
-// Frightfully smart array of int
-// Preliminary to Project 5
+// Header for class template TFSArray
+// Frightfully smart array of client specified type
 
 // History:
 // - v1:
@@ -36,6 +42,14 @@
 //   - Add _capacity data member.
 //   - Add constant DEFAULT_CAP and use it in setting the capacity in
 //     default ctor/ctor from size.
+// - v6:
+//   - Move entire class to header to convert to class template for
+//     client specified types.
+//   - Write copy ctor, copy assn, move assn, resize, insert, erase,
+//     and swap.
+//   - Document exception-safety guarantees for functions just written.
+//   - Document preconditions and exception-neutrality for all functions
+//   - Document requirements on types for class template.
 
 #ifndef FILE_TFSARRAY_H_INCLUDED
 #define FILE_TFSARRAY_H_INCLUDED
@@ -49,18 +63,21 @@
 
 
 // *********************************************************************
-// class TFSArray - Class definition
+// class template TFSArray - Class definition
 // *********************************************************************
 
 
-// class TFSArray
-// Frightfully Smart Array of int.
+// class template TFSArray
+// Frightfully Smart Array of client specified type.
 // Resizable, copyable/movable, exception-safe.
 // Invariants:
-//     0 <= _size <= _capacity.
-//     _data points to an array of value_type, allocated with new [],
-//      owned by *this, holding _capacity value_type values -- UNLESS
-//      _capacity == 0, in which case _data may be nullptr.
+//   0 <= _size <= _capacity.
+//   _data points to an array of value_type, allocated with new [],
+//    owned by *this, holding _capacity value_type values -- UNLESS
+//    _capacity == 0, in which case _data may be nullptr.
+// Requirements on Types:
+//   T has a copy ctor.
+//   T has a non-throwing dctor and non-throwing move operations.
 template <typename T>
 class TFSArray
 {
@@ -88,7 +105,8 @@ private:
 public:
 
     // Default ctor & ctor from size
-    // Strong Guarantee
+    // Strong Guarantee.
+    // Exception-neutral.
     explicit TFSArray(size_type size=0)
         :_capacity(std::max(size, size_type(DEFAULT_CAP))),
             // _capacity must be declared before _data
@@ -97,7 +115,8 @@ public:
     {}
 
     // Copy ctor
-    // Strong Guarantee
+    // Strong Guarantee.
+    // Exception-neutral.
     TFSArray(const TFSArray<value_type> & other)
         :_capacity(0),
          _size(0),
@@ -110,7 +129,8 @@ public:
     }
 
     // Move ctor
-    // No-Throw Guarantee
+    // No-Throw Guarantee.
+    // Exception-neutral.
     TFSArray(TFSArray<value_type> && other) noexcept
         :_capacity(other._capacity),
          _size(other._size),
@@ -122,7 +142,8 @@ public:
     }
 
     // Copy assignment
-    // ??? Guarantee
+    // Strong Guarantee.
+    // Exception-neutral.
     TFSArray<value_type> & operator=(const TFSArray<value_type> & other)
     {
         TFSArray<value_type> copyOfOther(other);
@@ -131,7 +152,8 @@ public:
     }
 
     // Move assignment
-    // No-Throw Guarantee
+    // No-Throw Guarantee.
+    // Exception-neutral.
     TFSArray<value_type> & operator=(TFSArray<value_type> && other) noexcept
     {
         swap(other);
@@ -139,7 +161,8 @@ public:
     }
 
     // Dctor
-    // No-Throw Guarantee
+    // No-Throw Guarantee.
+    // Exception-neutral.
     ~TFSArray()
     {
         delete [] _data;
@@ -149,9 +172,11 @@ public:
 public:
 
     // operator[] - non-const & const
+    // Returns a reference to the item at the index.
     // Pre:
-    //     ???
-    // No-Throw Guarantee
+    //   0 <= index < _size.
+    // No-Throw Guarantee.
+    // Exception-neutral.
     value_type & operator[](size_type index) noexcept
     {
         return _data[index];
@@ -165,21 +190,27 @@ public:
 public:
 
     // size
-    // No-Throw Guarantee
+    // Returns number of items in array.
+    // No-Throw Guarantee.
+    // Exception-neutral.
     size_type size() const noexcept
     {
         return _size;
     }
 
     // empty
-    // No-Throw Guarantee
+    // Returns bool for whether array is size zero.
+    // No-Throw Guarantee.
+    // Exception-neutral.
     bool empty() const noexcept
     {
         return size() == 0;
     }
 
     // begin - non-const & const
-    // No-Throw Guarantee
+    // Returns iterator to first item.
+    // No-Throw Guarantee.
+    // Exception-neutral.
     iterator begin() noexcept
     {
         return _data;
@@ -190,7 +221,9 @@ public:
     }
 
     // end - non-const & const
-    // No-Throw Guarantee
+    // Returns iterator to one past last item.
+    // No-Throw Guarantee.
+    // Exception-neutral.
     iterator end() noexcept
     {
         return begin() + size();
@@ -201,7 +234,12 @@ public:
     }
 
     // resize
-    // ??? Guarantee
+    // Resizes array, maintaining all prev data.
+    // Reallocates and copies array when necessary.
+    // Pre:
+    //   0 <= newsize.
+    // Strong Guarantee.
+    // Exception-neutral.
     void resize(size_type newsize)
     {
         if (newsize <= _capacity)
@@ -217,7 +255,11 @@ public:
     }
 
     // insert
-    // ??? Guarantee
+    // Inserts given item before the item referenced by the iterator.
+    // Returns iterator to the inserted item.
+    // Pre:
+    //   begin() <= pos <= end().
+    // Exception-neutral.
     iterator insert(iterator pos,
                     const value_type & item)
     {
@@ -230,7 +272,12 @@ public:
     }
 
     // erase
-    // ??? Guarantee
+    // Removes the item referenced by the iterator.
+    // Returns iterator to item after the removed item,
+    //   or end() if the last item was removed.
+    // Pre:
+    //   begin() <= pos < end().
+    // Exception-neutral.
     iterator erase(iterator pos)
     {
         std::rotate(pos, pos + 1, end());
@@ -239,21 +286,25 @@ public:
     }
 
     // push_back
-    // ??? Guarantee
+    // Adds given item to the end of the array.
+    // Exception-neutral.
     void push_back(const value_type & item)
     {
         insert(end(), item);
     }
 
     // pop_back
-    // ??? Guarantee
+    // Removes the last item from the array.
+    // Exception-neutral.
     void pop_back()
     {
         erase(end()-1);
     }
 
     // swap
-    // No-Throw Guarantee
+    // Swaps the values of *this and another array.
+    // No-Throw Guarantee.
+    // Exception-neutral.
     void swap(TFSArray<value_type> & other) noexcept
     {
         std::swap(_capacity, other._capacity);
