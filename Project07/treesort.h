@@ -7,7 +7,7 @@
 // IMPLEMENTED BY
 // Andrew S. Ng
 // Started: 2020-11-15
-// Updated: 2020-11-15
+// Updated: 2020-11-16
 //
 // For CS 311 Fall 2020
 // Header for function template treesort
@@ -24,39 +24,66 @@
 // For std::move
 
 
+/////////////////////////////////////////////////////////////////////
+//    struct BSTNode - Struct definition                           //
+/////////////////////////////////////////////////////////////////////
+
+
 // struct template BSTNode
 // Binary search tree node of client-specified value type.
 // Invariants:
-//     ???
+//   _left and _right point to BSTNode subtrees, or are empty.
+//   _left->_data <= _data <= _right->_data.
 // Requirements on Types:
-//     ???
+//   ValType has op<, a copy ctor, and a non-throwing dctor.
 template <typename ValType>
 struct BSTNode
 {
-    ValType _data;
-    std::unique_ptr<BSTNode> _left;
-    std::unique_ptr<BSTNode> _right;
 
+    ValType                  _data;   // Data for this node
+    std::unique_ptr<BSTNode> _left;   // Ptr to L subtree, or empty
+    std::unique_ptr<BSTNode> _right;  // Ptr to R subtree, or empty
+
+    // 1-param ctor
+    // _data is set to data.
+    // _left and _right are empty.
+    // No-Throw Guarantee.
     explicit BSTNode(const ValType & data)
         :_data(data)
     {}
-};
+
+    // dctor defaulted
+    // No-Throw Guarantee.
+    ~BSTNode() = default;
+
+    // No default ctor, copy/move operations
+    BSTNode() = delete;
+    BSTNode(const BSTNode & other) = delete;
+    BSTNode & operator=(const BSTNode & other) = delete;
+    BSTNode(BSTNode && other) = delete;
+    BSTNode & operator=(BSTNode && other) = delete;
+
+};  // End struct BSTNode
+
+
+/////////////////////////////////////////////////////////////////////
+//    struct BSTNode - Associated global functions                 //
+/////////////////////////////////////////////////////////////////////
 
 
 // insert
 // Inserts item into binary search tree.
 // Requirements on Types:
-//     ???
-// Exception safety guarantee:
-//     ???
+//   ValType has op<, a copy ctor, and a non-throwing dctor.
+// Strong Guarantee.
+// Exception Neutral.
 template <typename ValType>
 void insert(std::unique_ptr<BSTNode<ValType>> & head,
             const ValType & item)
 {
     if (!head)
     {
-        auto tmp = std::make_unique<BSTNode<ValType>>(item);
-        head = std::move(tmp);
+        head = std::make_unique<BSTNode<ValType>>(item);
         return;
     }
 
@@ -73,11 +100,10 @@ void insert(std::unique_ptr<BSTNode<ValType>> & head,
 // traverse
 // Writes binary search tree data to location by inorder traversal.
 // Pre:
-//     ???
+//   iter points to a valid location for writing data to.
 // Requirements on Types:
-//     ???
-// Exception safety guarantee:
-//     ???
+//   ValType has op<, a copy ctor, and a non-throwing dctor.
+// No-Throw Guarantee.
 template <typename ValType, typename FDIter>
 void traverse(const std::unique_ptr<BSTNode<ValType>> & ptr,
               FDIter & iter)
@@ -88,17 +114,23 @@ void traverse(const std::unique_ptr<BSTNode<ValType>> & ptr,
     traverse(ptr->_left, iter);
     *iter++ = ptr->_data;
     traverse(ptr->_right, iter);
-}              
+}
+
+
+/////////////////////////////////////////////////////////////////////
+//    Treesort - Algorithm definition                              //
+/////////////////////////////////////////////////////////////////////
 
 
 // treesort
 // Sort a given range using Treesort.
 // Pre:
-//     ???
+//   [first, last) is a valid range.
 // Requirements on Types:
-//     ???
-// Exception safety guarantee:
-//     ???
+//   FDIter is a forward iterator type.
+//   Value of FDIter has op<, a copy ctor, and a non-throwing dctor.
+// Strong Guarantee.
+// Exception Neutral.
 template <typename FDIter>
 void treesort(FDIter first, FDIter last)
 {
