@@ -1,6 +1,12 @@
-// squarer_test.cpp  SKELETON
+// squarer_test.cpp
+//
+// SKELETON BY
 // Glenn G. Chappell
 // 2020-11-20
+//
+// TEST CASES BY
+// Andrew S. Ng
+// 2020-12-01
 //
 // For CS 311 Fall 2020
 // Test program for class Squarer
@@ -41,9 +47,169 @@ const std::string test_suite_name =
 // *********************************************************************
 
 
-TEST_CASE("DUMMY")
+TEST_CASE("Squarer: non-negative ints")
 {
-    // DUMMY TEST CASE; REWRITE THIS AND ADD MORE!!!
+    Squarer sq;
+    SUBCASE("0 squared")
+    {
+        int arg = 0;
+        int result = 0;
+        INFO(arg << " squared is " << result);
+        REQUIRE(sq(arg) == result);
+    }
+    SUBCASE("1 squared")
+    {
+        int arg = 1;
+        int result = 1;
+        INFO(arg << " squared is " << result);
+        REQUIRE(sq(arg) == result);
+    }
+    SUBCASE("7 squared")
+    {
+        int arg = 7;
+        int result = 49;
+        INFO(arg << " squared is " << result);
+        REQUIRE(sq(arg) == result);
+    }
+    SUBCASE("12 squared")
+    {
+        int arg = 12;
+        int result = 144;
+        INFO(arg << " squared is " << result);
+        REQUIRE(sq(arg) == result);
+    }
+}
+TEST_CASE("Squarer: negative ints")
+{
+    Squarer sq;
+    SUBCASE("-1 squared")
+    {
+        int arg = -1;
+        int result = 1;
+        INFO(arg << " squared is " << result);
+        REQUIRE(sq(arg) == result);
+    }
+    SUBCASE("-6 squared")
+    {
+        int arg = -6;
+        int result = 36;
+        INFO(arg << " squared is " << result);
+        REQUIRE(sq(arg) == result);
+    }
+    SUBCASE("-11 squared")
+    {
+        int arg = -11;
+        int result = 121;
+        INFO(arg << " squared is " << result);
+        REQUIRE(sq(arg) == result);
+    }
+}
+TEST_CASE("Const Squarer: ints")
+{
+    const Squarer sq;
+    SUBCASE("0 squared")
+    {
+        int arg = 0;
+        int result = 0;
+        INFO(arg << " squared is " << result);
+        REQUIRE(sq(arg) == result);
+    }
+    SUBCASE("-5 squared")
+    {
+        int arg = -5;
+        int result = 25;
+        INFO(arg << " squared is " << result);
+        REQUIRE(sq(arg) == result);
+    }
+    SUBCASE("10 squared")
+    {
+        int arg = 10;
+        int result = 100;
+        INFO(arg << " squared is " << result);
+        REQUIRE(sq(arg) == result);
+    }
+}
+TEST_CASE("Squarer: non-negative doubles")
+{
+    Squarer sq;
+    SUBCASE("0.0 squared")
+    {
+        double arg = 0.0;
+        double result = 0.0;
+        INFO(arg << " squared is " << result);
+        REQUIRE(sq(arg) == doctest::Approx(result));
+    }
+    SUBCASE("1.0 squared")
+    {
+        double arg = 1.0;
+        double result = 1.0;
+        INFO(arg << " squared is " << result);
+        REQUIRE(sq(arg) == doctest::Approx(result));
+    }
+    SUBCASE("1.5 squared")
+    {
+        double arg = 1.5;
+        double result = 2.25;
+        INFO(arg << " squared is " << result);
+        REQUIRE(sq(arg) == doctest::Approx(result));
+    }
+    SUBCASE("16.35 squared")
+    {
+        double arg = 16.35;
+        double result = 267.3225;
+        INFO(arg << " squared is " << result);
+        REQUIRE(sq(arg) == doctest::Approx(result));
+    }
+}
+TEST_CASE("Squarer: negative doubles")
+{
+    Squarer sq;
+    SUBCASE("-1.0 squared")
+    {
+        double arg = -1.0;
+        double result = 1.0;
+        INFO(arg << " squared is " << result);
+        REQUIRE(sq(arg) == doctest::Approx(result));
+    }
+    SUBCASE("-5.76 squared")
+    {
+        double arg = -5.76;
+        double result = 33.1776;
+        INFO(arg << " squared is " << result);
+        REQUIRE(sq(arg) == doctest::Approx(result));
+    }
+    SUBCASE("-10.33 squared")
+    {
+        double arg = -10.33;
+        double result = 106.7089;
+        INFO(arg << " squared is " << result);
+        REQUIRE(sq(arg) == doctest::Approx(result));
+    }
+}
+TEST_CASE("Const Squarer: doubles")
+{
+    const Squarer sq;
+    SUBCASE("0.0 squared")
+    {
+        double arg = 0.0;
+        double result = 0.0;
+        INFO(arg << " squared is " << result);
+        REQUIRE(sq(arg) == doctest::Approx(result));
+    }
+    SUBCASE("-3.11 squared")
+    {
+        double arg = -3.11;
+        double result = 9.6721;
+        INFO(arg << " squared is " << result);
+        REQUIRE(sq(arg) == doctest::Approx(result));
+    }
+    SUBCASE("8.25 squared")
+    {
+        double arg = 8.25;
+        double result = 68.0625;
+        INFO(arg << " squared is " << result);
+        REQUIRE(sq(arg) == doctest::Approx(result));
+    }
 }
 
 
